@@ -3,7 +3,7 @@
 This project, developed as part of the Intel Unnati Industrial Training Programme by Team Classic Coders, is a GPS-based toll system simulation using Python. 
 The primary aim is to create an efficient and accurate system to streamline toll collection, reduce congestion, and improve the overall driving experience.
 ## Introduction
-Traditional toll collection methods, often plagued by congestion and delays, are gradually being replaced by innovative technology-driven solutions. This project focuses on developing a GPS-based toll system simulation that can handle real-time vehicle movement, automate toll calculations based on distance traveled, and support dynamic pricing and multiple payment options.
+Traditional toll collection methods such as fast tag, often plagued by congestion and delays, are gradually being replaced by innovative technology-driven solutions. This project focuses on developing a GPS-based toll system simulation that can handle real-time vehicle movement, automate toll calculations based on distance traveled, and support dynamic pricing and multiple payment options.
 
 ## Features
 **Live GPS Integration:**
@@ -52,6 +52,10 @@ Login feature for admin access.
 
 Secure processing of transactions.
 
+**Additional feature
+
+We have developed an android application which will send the live GPS Coordinates to the local server every 1.5 seconds. This coordinate is used to visualise the vehicle in a map and also it is used to calculate the toll prices dynamically.
+
 ## Installation
 To set up the project locally, follow these steps:
 
@@ -67,7 +71,7 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 ```
 **3. Install the required dependencies:**
 ```
-pip install pandas, numpy, plotly, simpy, matplotlib, geopy, folium
+pip install  pandas geopandas openpyxl simpy plotly shapely geopy matplotlib pillow folium
 ```
 **4. Ensure that all the Excel sheets, shapefiles, and photo logo are defined using their full directory paths before execution.**
 
@@ -146,7 +150,8 @@ Download the JSON File:
 
 After creating the credentials, you will see a dialog with your Client ID and Client Secret.
 Click on "Download" to download the JSON file containing your credentials.
-Save this file securely and rename it to something appropriate like credentials.json.
+Save this file in the project directory and rename it to something appropriate like credentials.json.
+Then paste the credentials.json file path in User_report.py line 162
 
  6.3. Set up a Google Sheet and paste the code in AppScript using the following instructions:
 ## Set Up Your Google Apps Script
@@ -157,7 +162,7 @@ Click on New Sheet.
 Click on “Extensions” and press "App Script," which opens a new window for typing your script code.
 Paste Your Code:
 
-Delete any code in the editor and paste your provided code:
+Delete any code in the editor and paste this code:
 
 ```javascript
 var spreadSheet = SpreadsheetApp.openByUrl("YOUR_GOOGLE_SHEET_URL");
@@ -208,18 +213,15 @@ Click Allow to grant permissions.
 Copy the Web App URL:
 
 After deployment, a URL will be generated.
-Copy this URL as you will need to paste it in your code.
-
-  6.5. Update Your Code with the Web App URL
-Insert the Web App URL:
-Replace the placeholder in your application with the copied Web App URL where necessary.
+Copy this URL and paste it in User_report.py line 86
 
 **7. GPS APP:**
    7.1. App setup:
        For getting GPS coordinates directly into simulation first install the GPS app using the following repo and set it up to get live gps location.
+       https://github.com/Aswinraj040/GPS_Toll
 
    7.2. GPS simulation execution:
-       Run the server.py code and then GPS.py code to take the GPS location from the app and run it through the simulation.
+       Run the server.py code and then GPS.py code to open the matplotlib visualisation and toll zone price calculations.
 
 ## Project directory:
 
@@ -237,13 +239,13 @@ GPS-Toll-based-System-Simulation/
 
 │   ├── PATHS/
 
-│   │   ├── ld_truck_1.txt
-
 │   │   ├── rh_bus_1.txt
 
 │   │   ├── rh_bus_2.txt
 
 │   │   ├── rh_bus_3.txt
+
+│   │   ├── ...
 
 │   ├── toll_coordinates.xlsx
 
@@ -281,6 +283,8 @@ GPS-Toll-based-System-Simulation/
 
 │   ├── account.py
 
+│   ├── server.py
+
 │   ├── user_report.py
 
 │   ├── interface.py
@@ -309,8 +313,6 @@ state_highways.shp: Shapefile for state highways.
 toll_zones.shp: Shapefile for toll zones.
 
 PATHS/: Contains text files with different routes.
-
-ld_truck_1.txt: Route for ld truck 1.
 
 rh_bus_1.txt: Route for rh bus 1.
 
