@@ -5,11 +5,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 def display_vehicle_report():
-    # Read data from Excel files
     vehicle_simulation_results = pd.read_excel('vehicle_simulation_results.xlsx', index_col='vehicle_id')
     vehicle_data = pd.read_excel('/vehicle_data.xlsx', index_col='vehicle_id')
 
-    # Function to display bar chart for distance calculation
     def display_vehicle_distance_chart():
         vehicle_numbers = vehicle_simulation_results.index.tolist()
         distances_covered = vehicle_simulation_results['distance_travelled'].tolist()
@@ -21,7 +19,6 @@ def display_vehicle_report():
         ax.set_title('Distance Covered by Each Vehicle')
         ax.grid(True, which='both', linestyle='--', linewidth=0.5)
 
-        # Adding data labels
         for bar in bars:
             yval = bar.get_height()
             ax.text(bar.get_x() + bar.get_width() / 2, yval, f'{yval:.2f}', va='bottom')  # va: vertical alignment

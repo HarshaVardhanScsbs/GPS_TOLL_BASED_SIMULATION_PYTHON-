@@ -9,13 +9,11 @@ import queue
 from Simulation import run_simulation  # Import the run_simulation function
 from plotly.offline import plot
 
-# Create a queue for thread-safe communication
 result_queue = queue.Queue()
 log_queue = queue.Queue()
-# Colors
-PRIMARY_COLOR = "#1E90FF"  # DodgerBlue
-SECONDARY_COLOR = "#FFFFFF"  # White
-TEXT_COLOR = "#000000"  # Black
+PRIMARY_COLOR = "#1E90FF"  
+SECONDARY_COLOR = "#FFFFFF"  
+TEXT_COLOR = "#000000"  
 
 def login():
     user = username_entry.get()
@@ -193,7 +191,6 @@ def display_vehicle_report():
         ax.set_title('Feature Distribution')
         display_figure(fig)
 
-    # Function to display the figure in the Tkinter window
     def display_figure(fig):
         for widget in frame.winfo_children():
             widget.destroy()
@@ -201,48 +198,39 @@ def display_vehicle_report():
         canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
-    # Create the main window for the report
     report_window = tk.Toplevel(root)
     report_window.title("Vehicle Report")
-    report_window.geometry("1024x768")  # Set window size to 1024x768 pixels
+    report_window.geometry("1024x768")  
 
-    # Create the main frame for buttons and charts
     main_frame = ttk.Frame(report_window)
     main_frame.pack(fill=tk.BOTH, expand=True)
 
-    # Create a frame for the buttons
     button_frame = ttk.Frame(main_frame)
     button_frame.pack(side=tk.TOP, fill=tk.X)
 
-    # Create buttons
     button_donut = ttk.Button(button_frame, text="Analysis on Vehicle Type", command=display_donut_chart)
     button_vehicle_distance = ttk.Button(button_frame, text="Distance Calculation", command=display_vehicle_distance_chart)
     button_total_amount_spent = ttk.Button(button_frame, text="Toll Expenses", command=display_total_amount_spent_chart)
 
-    # Pack buttons
     button_donut.pack(side=tk.LEFT, padx=5, pady=5)
     button_vehicle_distance.pack(side=tk.LEFT, padx=5, pady=5)
     button_total_amount_spent.pack(side=tk.LEFT, padx=5, pady=5)
 
-    # Create a frame for the plot
     frame = ttk.Frame(main_frame)
     frame.pack(fill=tk.BOTH, expand=True)
 
 
 
-# Main application window
 root = tk.Tk()
-root.withdraw()  # Hide main window initially
+root.withdraw()  
 root.title("GPS Toll Simulation")
 root.geometry("1200x768")
-root.configure(bg=PRIMARY_COLOR)  # Set background color
+root.configure(bg=PRIMARY_COLOR)  
 
 
 
 
-fullscreen = False  # Start in windowed mode
-
-# Set the window to full screen
+fullscreen = False  
 root.attributes("-fullscreen", fullscreen)
 
 # Add a logo image to the login page
@@ -271,14 +259,11 @@ password_entry.pack(pady=5)
 login_button = tk.Button(login_window, text="Login", command=login, bg=SECONDARY_COLOR, fg=TEXT_COLOR)
 login_button.pack(pady=20)
 
-# Create the content frame for the main window
 content_frame = ttk.Frame(root)
 content_frame.pack(fill=tk.BOTH, expand=True)
 
-# Create a Text widget to display the output
 output_text = tk.Text(content_frame, wrap=tk.WORD, height=15, width=45)
 output_text.grid(row=9, column=0, columnspan=2, padx=10, pady=5, sticky='nsew')
-# Create widgets for the main window
 tk.Label(content_frame, text="Vehicle ID:").grid(row=0, column=0, padx=5, pady=5, sticky='w')
 vehicle_id_entry = tk.Entry(content_frame)
 vehicle_id_entry.grid(row=0, column=0, padx=80, pady=5, sticky='w')
@@ -302,20 +287,16 @@ route_index_entry.grid(row=4, column=0, padx=80, pady=5, sticky='w')
 add_vehicle_button = tk.Button(content_frame, text="Add Vehicle", command=add_vehicle)
 add_vehicle_button.grid(row=6, column=0, columnspan=1, pady=10, padx=80)
 
-# Button to run simulation
 run_simulation_button = tk.Button(content_frame, text="Run Simulation", command=run_simulation_thread)
 run_simulation_button.grid(row=7, column=0, columnspan=1, pady=10, padx=80)
 
-# Button to display the vehicle report
 simulation_report_button = tk.Button(content_frame, text="Simulation Report", command=display_vehicle_report)
 simulation_report_button.grid(row=6, column=1, columnspan=1, pady=10, padx=50)
 
-# Button to display Plotly visualization
 plotly_button = tk.Button(content_frame, text="Show Plotly Visualization", command=run_simulation_thread)
 plotly_button.grid(row=7, column=1, columnspan=1, pady=10, padx=50)
 
 
-# Create the Treeview widget to display simulation results
 result_tree = ttk.Treeview(content_frame, columns=("Vehicle ID", "Tolls Crossed", "Total Toll Amount", "Total Distance"), show='headings')
 result_tree.heading("Vehicle ID", text="Vehicle ID")
 result_tree.heading("Tolls Crossed", text="Tolls Crossed")
@@ -323,20 +304,16 @@ result_tree.heading("Total Toll Amount", text="Total Toll Amount")
 result_tree.heading("Total Distance", text="Total Distance")
 result_tree.grid(row=8, column=0, columnspan=2, pady=5,padx=10, sticky='nsew')
 
-# Add a scrollbar to the Treeview
 scrollbar = ttk.Scrollbar(content_frame, orient="vertical", command=result_tree.yview)
 scrollbar.grid(row=8, column=0, sticky='nw')
 result_tree.configure(yscrollcommand=scrollbar.set)
 
-# Create a Text widget to display logs
 tk.Label(content_frame, text="Logs:").grid(row=7, column=2, padx=10, pady=5, sticky='w')
 log_text_display = tk.Text(content_frame, wrap=tk.WORD, height=15,width=45, state=tk.DISABLED)
 log_text_display.grid(row=8, column=2, padx=10, pady=5, sticky='nsew')
 
-# Configure row and column weights
 content_frame.grid_rowconfigure(9, weight=1)
 content_frame.grid_columnconfigure(1, weight=1)
 
-# Start the Tkinter event loop
 
 root.mainloop()

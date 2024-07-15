@@ -6,28 +6,22 @@ from shapely.geometry import Point
 from geopy.distance import geodesic
 from matplotlib.animation import FuncAnimation
 
-# Load account information from Excel file
 accounts = pd.read_excel('/vehicle_data.xlsx')
 
-# Function to debit toll amount and print balance
 def debit_toll_and_print_balance(vehicle_number, toll_amount):
     account = accounts.loc[accounts['vehicle_id'] == vehicle_number]
     account['InitialBalance'] -= toll_amount
     updated_balance = account['InitialBalance']
     print(f'Vehicle {vehicle_number}: New balance = {updated_balance.values[0]:.2f}')
 
-# Shapefile of all road networks
 NATIONAL_HIGHWAYS_PATH = '/Data/Map network/chennai_shp.shp'
 STATE_HIGHWAYS_PATH = '/Data/Map network/statehighway.shp'
 
-# Load shapefiles into GeoDataframes
 national_highway = gpd.read_file(NATIONAL_HIGHWAYS_PATH)
 state_highway = gpd.read_file(STATE_HIGHWAYS_PATH)
 
-# Ensure all layers use the same coordinate reference system (CRS)
 crs = national_highway.crs
 
-# Load toll points from Excel file
 tolls = pd.read_excel('/Data/toll_coordinates.xlsx')
 toll_gdf = gpd.GeoDataFrame(
     tolls,
@@ -36,10 +30,8 @@ toll_gdf = gpd.GeoDataFrame(
 )
 toll_gdf = toll_gdf.to_crs(crs)
 
-# Load the shapefile for specific toll zones for vehicle to travel
 Toll_zones = gpd.read_file('/Data/Map network/toll_zone_coordinates.shp')
 
-# Function to determine if a vehicle is in toll zones
 def is_point_in_toll_zones(point, toll_zones):
     for i, toll_zone in enumerate(toll_zones.geometry):
         if toll_zone.contains(point):
@@ -67,15 +59,12 @@ class TollCalculator:
             print(f"Error: Toll rate for vehicle type '{vehicle_type}' in zone '{toll_zone_index + 1}' not found.")
             return 0
 
-# Load vehicle data from Excel
 vehicle_data = pd.read_excel('/vehicle_data.xlsx')
 
-# Assuming we are tracking one specific vehicle
-vehicle_id = 'TN01 AA2369'  # This should be updated as per your specific vehicle ID
+vehicle_id = 'TN01 AA2369'  
 vehicle_info = vehicle_data[vehicle_data['vehicle_id'] == vehicle_id].iloc[0]
 vehicle_type = vehicle_info['vehicle_type']
 
-# Initialize variables
 toll_calculator = TollCalculator()
 inside_toll_zone = False
 toll_start_point = None
@@ -84,7 +73,6 @@ distance_travelled = 0
 total_toll_amount = 0
 tolls_crossed = set()
 
-# Load initial geospatial data
 tolls = pd.read_excel('/Data/toll_coordinates.xlsx')
 toll_gdf = gpd.GeoDataFrame(
     tolls,
@@ -94,19 +82,15 @@ toll_gdf = gpd.GeoDataFrame(
 buildings = gpd.read_file('/Data/Map network/chennai_shp.shp')
 landuse = gpd.read_file('/Data/Map network/statehighway.shp')
 
-# Create a Matplotlib figure and axes
 fig, ax = plt.subplots(1, 1, figsize=(15, 15))
 
-# Plot the layers
 toll_gdf.plot(ax=ax, color='black', linewidth=1, label='Tolls')
 buildings.plot(ax=ax, color='blue', alpha=0.5, label='Buildings')
 landuse.plot(ax=ax, color='green', alpha=0.5, label='Land Use')
 
-# Initialize the vehicle marker
 vehicle_marker = Rectangle((0, 0), 0.001, 0.001, color='red', label='Vehicle')
 ax.add_patch(vehicle_marker)
 
-# Customize the plot
 ax.set_title('Map with Roads, Buildings, and Land Use')
 ax.legend()
 ax.grid(True)
@@ -117,17 +101,14 @@ def calculate_distance(point1, point2):
 def update_plot(frame):
     global inside_toll_zone, toll_start_point, current_toll_zone, distance_travelled, total_toll_amount, tolls_crossed
     try:
-        # Read the last line of the text file
         with open('/coordinates.txt', 'r') as file:
             lines = file.readlines()
             if lines:
                 last_line = lines[-1].strip()
                 vehicle_lat, vehicle_lon = map(float, last_line.split(','))
 
-                # Update the vehicle marker position
                 vehicle_marker.set_xy((vehicle_lon, vehicle_lat))
 
-                # Create a point for the current location
                 current_point = Point(vehicle_lon, vehicle_lat)
 
                 if not inside_toll_zone:
@@ -151,15 +132,12 @@ def update_plot(frame):
                         print(f"Distance in toll zone: {distance_in_toll_zone:.2f} km")
                         print(f"Toll amount: {toll_amount:.2f}")
 
-                        # Update the account balance
                         debit_toll_and_print_balance(vehicle_id, toll_amount)
 
-                # Redraw the plot
                 fig.canvas.draw_idle()
     except Exception as e:
         print(f"Error: {e}")
 
-# Use FuncAnimation to update the plot every second
 ani = FuncAnimation(fig, update_plot, interval=1000)
 
 plt.show()
